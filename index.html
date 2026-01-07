@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Benevolent Society Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+  padding: 15px;
+}
+h1 { text-align: center; }
+.card {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+.balance {
+  font-size: 28px;
+  text-align: center;
+  font-weight: bold;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+th { background: #f0f0f0; }
+.yes { background: #c8f7c5; font-weight: bold; }
+.no { background: #f7c5c5; font-weight: bold; }
+ul { padding-left: 20px; }
+a { text-decoration: none; color: #0066cc; }
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Benevolent Society Dashboard</h1>
+
+<div class="card">
+  <div class="balance">Current Balance: Rs. <span id="balance">0</span></div>
+</div>
+
+<div class="card">
+  <h3>Team Contributions (Incident-wise)</h3>
+  <div style="overflow-x:auto;">
+    <table id="teamTable"></table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Last 5 Donations</h3>
+  <ul id="donations"></ul>
+</div>
+
+<div class="card">
+  <h3>Bank Statements (Last 5 Months)</h3>
+  <ul id="statements"></ul>
+</div>
+
+<div class="footer">
+  Last updated: <span id="updated"></span>
+</div>
+
+<script>
+const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
+const baseURL = `https://opensheet.elk.sh/${SHEET_ID}`;
+
+const formatRs = n => n.toLocaleString("en-IN");
+
+// -------- BALANCE + DONATIONS ----------
+fetch(`${baseURL}/Transactions`)
+.then(res => res.json())
+.then(data => {
+  let totalIn = 0, totalOut = 0;
+
+  const donations = data
+    .filter(r => r.Type === "IN")
+    .sort((a,b) => new Date(b.Date) - new Date(a.Date))
+    .slice(0,5);
+
+  data.forEach(r => {
+    if (r.Type === "IN") totalIn += Number(r.Amount);
+    if (r.Type === "OUT") totalOut += Number(r.Amount);
+  });
+
+  document.getElementById("balance").innerText = formatRs(totalIn - totalOut);
+
+  donations.forEach(d => {
+    document.getElementById("donations").innerHTML +=
+      `<li>${d.Date} – Rs. ${formatRs(d.Amount)} (${d.Team})</li>`;
+  });
+});
+
+// -------- TEAM CONTRIBUTIONS ----------
+fetch(`${baseURL}/Team_Contributions`)
+.then(res => res.json())
+.then(data => {
+  const table = document.getElementById("teamTable");
+  const headers = Object.keys(data[0]);
+
+  table.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+
+  data.forEach(row => {
+    let tr = "<tr>";
+    headers.forEach(h => {
+      const val = row[h];
+      if (val === "Yes") tr += `<td class="yes">✔</td>`;
+      else if (val === "No") tr += `<td class="no">✖</td>`;
+      else tr += `<td>${val}</td>`;
+    });
+    tr += "</tr>";
+    table.innerHTML += tr;
+  });
+});
+
+// -------- BANK STATEMENTS ----------
+fetch(`${baseURL}/Bank_Statements`)
+.then(res => res.json())
+.then(data => {
+  data.slice(0,5).forEach(r => {
+    document.getElementById("statements").innerHTML +=
+      `<li><a href="${r.Link}" target="_blank">📄 ${r.Month}</a></li>`;
+  });
+});
+
+document.getElementById("updated").innerText = new Date().toLocaleString();
+</script>
+
+</body>
+</html>

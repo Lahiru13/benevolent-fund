@@ -4,56 +4,132 @@
 <meta charset="UTF-8">
 <title>Benevolent Society Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f6fa;
-  margin: 0;
-  padding: 15px;
+:root {
+  --primary: #2f80ed;
+  --success: #27ae60;
+  --danger: #eb5757;
+  --bg: #f4f6fb;
 }
-h1 { text-align: center; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: #333;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
 .card {
   background: #fff;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
+
 .balance {
-  font-size: 28px;
+  font-size: 36px;
+  font-weight: 700;
   text-align: center;
-  font-weight: bold;
+  color: var(--primary);
 }
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+
+th {
+  background: #f0f3f9;
+  padding: 10px;
+  font-weight: 600;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
   text-align: center;
 }
-th { background: #f0f0f0; }
-.yes { background: #c8f7c5; font-weight: bold; }
-.no { background: #f7c5c5; font-weight: bold; }
-ul { padding-left: 20px; }
-a { text-decoration: none; color: #0066cc; }
+
+.status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status.yes {
+  background: #eafaf1;
+  color: var(--success);
+}
+
+.status.no {
+  background: #fdecec;
+  color: var(--danger);
+}
+
+ul {
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+a {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
 .footer {
   text-align: center;
   font-size: 12px;
-  color: #666;
+  color: #777;
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .balance {
+    font-size: 28px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
 <h1>Benevolent Society Dashboard</h1>
 
+<!-- BALANCE -->
 <div class="card">
-  <div class="balance">Current Balance: Rs. <span id="balance">0</span></div>
+  <div class="balance">Rs. <span id="balance">0</span></div>
+  <div class="subtitle">Current Available Balance</div>
 </div>
 
+<!-- TEAM CONTRIBUTIONS -->
 <div class="card">
   <h3>Team Contributions (Incident-wise)</h3>
   <div style="overflow-x:auto;">
@@ -61,11 +137,13 @@ a { text-decoration: none; color: #0066cc; }
   </div>
 </div>
 
+<!-- LAST DONATIONS -->
 <div class="card">
   <h3>Last 5 Donations</h3>
   <ul id="donations"></ul>
 </div>
 
+<!-- BANK STATEMENTS -->
 <div class="card">
   <h3>Bank Statements (Last 5 Months)</h3>
   <ul id="statements"></ul>
@@ -75,60 +153,85 @@ a { text-decoration: none; color: #0066cc; }
   Last updated: <span id="updated"></span>
 </div>
 
+</div>
+
 <script>
+/* ================= CONFIG ================= */
 const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
-const baseURL = `https://opensheet.elk.sh/${SHEET_ID}`;
+const BASE_URL = `https://opensheet.elk.sh/${SHEET_ID}`;
+const formatRs = n => Number(n).toLocaleString("en-IN");
 
-const formatRs = n => n.toLocaleString("en-IN");
+/* ================= BALANCE ================= */
+let totalIn = 0;
+let totalOut = 0;
+let adjustmentsTotal = 0;
 
-// -------- BALANCE + DONATIONS ----------
-fetch(`${baseURL}/Transactions`)
+// Transactions
+fetch(`${BASE_URL}/Transactions`)
 .then(res => res.json())
 .then(data => {
-  let totalIn = 0, totalOut = 0;
-
-  const donations = data
-    .filter(r => r.Type === "IN")
-    .sort((a,b) => new Date(b.Date) - new Date(a.Date))
-    .slice(0,5);
 
   data.forEach(r => {
     if (r.Type === "IN") totalIn += Number(r.Amount);
     if (r.Type === "OUT") totalOut += Number(r.Amount);
   });
 
-  document.getElementById("balance").innerText = formatRs(totalIn - totalOut);
+  // Last 5 donations
+  const donations = data
+    .filter(r => r.Type === "IN")
+    .sort((a,b) => new Date(b.Date) - new Date(a.Date))
+    .slice(0,5);
 
   donations.forEach(d => {
     document.getElementById("donations").innerHTML +=
-      `<li>${d.Date} – Rs. ${formatRs(d.Amount)} (${d.Team})</li>`;
+      `<li>${d.Date} – Rs. ${formatRs(d.Amount)} (${d.Team || "General"})</li>`;
   });
 });
 
-// -------- TEAM CONTRIBUTIONS ----------
-fetch(`${baseURL}/Team_Contributions`)
+// Manual balance adjustments
+fetch(`${BASE_URL}/Balance_Adjustments`)
 .then(res => res.json())
 .then(data => {
+  data.forEach(a => adjustmentsTotal += Number(a.Amount));
+})
+.finally(() => {
+  setTimeout(() => {
+    const finalBalance = (totalIn - totalOut) + adjustmentsTotal;
+    document.getElementById("balance").innerText = formatRs(finalBalance);
+  }, 300);
+});
+
+/* ================= TEAM CONTRIBUTIONS ================= */
+fetch(`${BASE_URL}/Team_Contributions`)
+.then(res => res.json())
+.then(data => {
+
   const table = document.getElementById("teamTable");
   const headers = Object.keys(data[0]);
 
-  table.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+  // Header row
+  table.innerHTML =
+    "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
 
+  // Data rows
   data.forEach(row => {
     let tr = "<tr>";
     headers.forEach(h => {
       const val = row[h];
-      if (val === "Yes") tr += `<td class="yes">✔</td>`;
-      else if (val === "No") tr += `<td class="no">✖</td>`;
-      else tr += `<td>${val}</td>`;
+      if (val === "Yes")
+        tr += `<td><span class="status yes">Received</span></td>`;
+      else if (val === "No")
+        tr += `<td><span class="status no">Pending</span></td>`;
+      else
+        tr += `<td><b>${val}</b></td>`;
     });
     tr += "</tr>";
     table.innerHTML += tr;
   });
 });
 
-// -------- BANK STATEMENTS ----------
-fetch(`${baseURL}/Bank_Statements`)
+/* ================= BANK STATEMENTS ================= */
+fetch(`${BASE_URL}/Bank_Statements`)
 .then(res => res.json())
 .then(data => {
   data.slice(0,5).forEach(r => {
@@ -137,7 +240,9 @@ fetch(`${baseURL}/Bank_Statements`)
   });
 });
 
-document.getElementById("updated").innerText = new Date().toLocaleString();
+/* ================= FOOTER ================= */
+document.getElementById("updated").innerText =
+  new Date().toLocaleString("en-GB");
 </script>
 
 </body>

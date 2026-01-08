@@ -7,111 +7,119 @@
 
 <style>
 :root {
-  --primary: #2f80ed;
-  --success: #27ae60;
-  --danger: #eb5757;
-  --bg: #f4f6fb;
+  --primary:#2f80ed;
+  --success:#27ae60;
+  --danger:#eb5757;
+  --bg:#f4f6fb;
 }
 
 body {
-  margin: 0;
+  margin:0;
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: #333;
+  background:var(--bg);
+  color:#333;
 }
 
 .container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 20px;
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 30px;
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.grid-top {
+  display:grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap:20px;
+}
+
+.grid-bottom {
+  display:grid;
+  grid-template-columns: 3fr 1fr;
+  gap:20px;
+  margin-top:20px;
 }
 
 .card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
 }
 
 .balance {
-  font-size: 36px;
-  font-weight: 700;
-  text-align: center;
-  color: var(--primary);
+  font-size:40px;
+  font-weight:700;
+  color:var(--primary);
 }
 
 .subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
+  color:#777;
+  font-size:14px;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
 }
 
 th {
-  background: #f0f3f9;
-  padding: 10px;
-  font-weight: 600;
+  background:#f0f3f9;
+  padding:10px;
 }
 
 td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
+  padding:10px;
+  border-bottom:1px solid #eee;
+  text-align:center;
 }
 
 .status {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  display: inline-block;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
 }
 
 .status.yes {
-  background: #eafaf1;
-  color: var(--success);
+  background:#eafaf1;
+  color:var(--success);
 }
 
 .status.no {
-  background: #fdecec;
-  color: var(--danger);
+  background:#fdecec;
+  color:var(--danger);
 }
 
 ul {
-  padding-left: 18px;
+  padding-left:18px;
 }
 
 li {
-  margin-bottom: 6px;
+  margin-bottom:8px;
 }
 
 a {
-  color: var(--primary);
-  font-weight: 500;
-  text-decoration: none;
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:500;
 }
 
 .footer {
-  text-align: center;
-  font-size: 12px;
-  color: #777;
-  margin-top: 30px;
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin-top:30px;
 }
 
-@media (max-width: 768px) {
-  .balance {
-    font-size: 28px;
+@media(max-width:900px){
+  .grid-top, .grid-bottom {
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -123,30 +131,40 @@ a {
 
 <h1>Benevolent Society Dashboard</h1>
 
-<!-- BALANCE -->
-<div class="card">
-  <div class="balance">Rs. <span id="balance">0</span></div>
-  <div class="subtitle">Current Available Balance</div>
-</div>
+<!-- TOP ROW -->
+<div class="grid-top">
 
-<!-- TEAM CONTRIBUTIONS -->
-<div class="card">
-  <h3>Team Contributions (Incident-wise)</h3>
-  <div style="overflow-x:auto;">
-    <table id="teamTable"></table>
+  <!-- MAIN BALANCE -->
+  <div class="card">
+    <div class="balance">Rs. <span id="balance">0</span></div>
+    <div class="subtitle">Main Balance</div>
   </div>
+
+  <!-- LAST 5 OUTGOING -->
+  <div class="card">
+    <h3>Last 5 Donations (Outgoing)</h3>
+    <ul id="outgoing"></ul>
+  </div>
+
 </div>
 
-<!-- LAST DONATIONS -->
-<div class="card">
-  <h3>Last 5 Donations</h3>
-  <ul id="donations"></ul>
-</div>
+<!-- BOTTOM ROW -->
+<div class="grid-bottom">
 
-<!-- BANK STATEMENTS -->
-<div class="card">
-  <h3>Bank Statements (Last 5 Months)</h3>
-  <ul id="statements"></ul>
+  <!-- INCIDENT WISE -->
+  <div class="card">
+    <h3>Incident-wise Contribution from Teams</h3>
+    <div style="overflow-x:auto">
+      <table id="teamTable"></table>
+    </div>
+  </div>
+
+  <!-- BANK STATEMENTS -->
+  <div class="card">
+    <h3>Monthly Bank Statements</h3>
+    <ul id="statements"></ul>
+  </div>
+
 </div>
 
 <div class="footer">
@@ -156,93 +174,74 @@ a {
 </div>
 
 <script>
-/* ================= CONFIG ================= */
 const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
-const BASE_URL = `https://opensheet.elk.sh/${SHEET_ID}`;
-const formatRs = n => Number(n).toLocaleString("en-IN");
+const BASE = `https://opensheet.elk.sh/${SHEET_ID}`;
+const rs = n => Number(n).toLocaleString("en-IN");
 
-/* ================= BALANCE ================= */
-let totalIn = 0;
-let totalOut = 0;
-let adjustmentsTotal = 0;
+let totalIn = 0, totalOut = 0, adjustments = 0;
 
-// Transactions
-fetch(`${BASE_URL}/Transactions`)
-.then(res => res.json())
-.then(data => {
-
-  data.forEach(r => {
-    if (r.Type === "IN") totalIn += Number(r.Amount);
-    if (r.Type === "OUT") totalOut += Number(r.Amount);
+/* TRANSACTIONS */
+fetch(`${BASE}/Transactions`)
+.then(r=>r.json())
+.then(data=>{
+  data.forEach(d=>{
+    if(d.Type==="IN") totalIn+=+d.Amount;
+    if(d.Type==="OUT") totalOut+=+d.Amount;
   });
 
-  // Last 5 donations
-  const donations = data
-    .filter(r => r.Type === "IN")
-    .sort((a,b) => new Date(b.Date) - new Date(a.Date))
-    .slice(0,5);
-
-  donations.forEach(d => {
-    document.getElementById("donations").innerHTML +=
-      `<li>${d.Date} – Rs. ${formatRs(d.Amount)} (${d.Team || "General"})</li>`;
-  });
+  data.filter(d=>d.Type==="OUT")
+      .sort((a,b)=>new Date(b.Date)-new Date(a.Date))
+      .slice(0,5)
+      .forEach(d=>{
+        outgoing.innerHTML+=
+          `<li>${d.Date} – Rs. ${rs(d.Amount)} (${d.Description})</li>`;
+      });
 });
 
-// Manual balance adjustments
-fetch(`${BASE_URL}/Balance_Adjustments`)
-.then(res => res.json())
-.then(data => {
-  data.forEach(a => adjustmentsTotal += Number(a.Amount));
+/* BALANCE ADJUSTMENTS */
+fetch(`${BASE}/Balance_Adjustments`)
+.then(r=>r.json())
+.then(d=>{
+  d.forEach(a=>adjustments+=+a.Amount);
 })
-.finally(() => {
-  setTimeout(() => {
-    const finalBalance = (totalIn - totalOut) + adjustmentsTotal;
-    document.getElementById("balance").innerText = formatRs(finalBalance);
-  }, 300);
+.finally(()=>{
+  setTimeout(()=>{
+    balance.innerText = rs((totalIn-totalOut)+adjustments);
+  },300);
 });
 
-/* ================= TEAM CONTRIBUTIONS ================= */
-fetch(`${BASE_URL}/Team_Contributions`)
-.then(res => res.json())
-.then(data => {
-
-  const table = document.getElementById("teamTable");
+/* TEAM CONTRIBUTIONS */
+fetch(`${BASE}/Team_Contributions`)
+.then(r=>r.json())
+.then(data=>{
   const headers = Object.keys(data[0]);
+  teamTable.innerHTML =
+    "<tr>"+headers.map(h=>`<th>${h}</th>`).join("")+"</tr>";
 
-  // Header row
-  table.innerHTML =
-    "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-
-  // Data rows
-  data.forEach(row => {
-    let tr = "<tr>";
-    headers.forEach(h => {
-      const val = row[h];
-      if (val === "Yes")
-        tr += `<td><span class="status yes">Received</span></td>`;
-      else if (val === "No")
-        tr += `<td><span class="status no">Pending</span></td>`;
-      else
-        tr += `<td><b>${val}</b></td>`;
+  data.forEach(row=>{
+    let tr="<tr>";
+    headers.forEach(h=>{
+      if(row[h]==="Yes")
+        tr+=`<td><span class="status yes">Received</span></td>`;
+      else if(row[h]==="No")
+        tr+=`<td><span class="status no">Pending</span></td>`;
+      else tr+=`<td><b>${row[h]}</b></td>`;
     });
-    tr += "</tr>";
-    table.innerHTML += tr;
+    teamTable.innerHTML+=tr+"</tr>";
   });
 });
 
-/* ================= BANK STATEMENTS ================= */
-fetch(`${BASE_URL}/Bank_Statements`)
-.then(res => res.json())
-.then(data => {
-  data.slice(0,5).forEach(r => {
-    document.getElementById("statements").innerHTML +=
-      `<li><a href="${r.Link}" target="_blank">📄 ${r.Month}</a></li>`;
+/* BANK STATEMENTS */
+fetch(`${BASE}/Bank_Statements`)
+.then(r=>r.json())
+.then(d=>{
+  d.slice(0,5).forEach(s=>{
+    statements.innerHTML+=
+      `<li><a href="${s.Link}" target="_blank">📄 ${s.Month}</a></li>`;
   });
 });
 
-/* ================= FOOTER ================= */
-document.getElementById("updated").innerText =
-  new Date().toLocaleString("en-GB");
+updated.innerText = new Date().toLocaleString("en-GB");
 </script>
 
 </body>

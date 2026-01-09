@@ -561,18 +561,33 @@ a:hover {
 <script>
 const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
 const BASE = `https://opensheet.elk.sh/${SHEET_ID}`;
-const rs = n => Number(n).toLocaleString("en-IN");
+const rs = n => {
+  const num = Number(n);
+  return isNaN(num) ? '0' : num.toLocaleString("en-IN");
+};
 
 let totalIn = 0, totalOut = 0, adjustments = 0;
+
+// Set initial balance display
+balance.innerText = '0';
 
 /* TRANSACTIONS */
 fetch(`${BASE}/Transactions`)
 .then(r=>r.json())
 .then(data=>{
+  console.log('Transactions data:', data); // Debug log
+  
+  totalIn = 0;
+  totalOut = 0;
+  
   data.forEach(d=>{
-    if(d.Type==="IN") totalIn+=+d.Amount;
-    if(d.Type==="OUT") totalOut+=+d.Amount;
+    const amount = Number(d.Amount) || 0;
+    if(d.Type==="IN") totalIn += amount;
+    if(d.Type==="OUT") totalOut += amount;
   });
+  
+  console.log('Total IN:', totalIn, 'Total OUT:', totalOut); // Debug log
+  updateBalance();
 
   const outgoingList = data.filter(d=>d.Type==="OUT")
       .sort((a,b)=>new Date(b.Date)-new Date(a.Date))
@@ -592,24 +607,37 @@ fetch(`${BASE}/Transactions`)
     });
   }
 })
-.catch(()=>{
+.catch(err=>{
+  console.error('Error loading transactions:', err);
   outgoing.innerHTML = '<li style="text-align: center; color: var(--danger);">Error loading donations</li>';
+  updateBalance();
 });
 
 /* BALANCE ADJUSTMENTS */
 fetch(`${BASE}/Balance_Adjustments`)
 .then(r=>r.json())
 .then(d=>{
-  d.forEach(a=>adjustments+=+a.Amount);
-})
-.catch(()=>{
+  console.log('Adjustments data:', d); // Debug log
   adjustments = 0;
+  d.forEach(a=>{
+    const amt = Number(a.Amount) || 0;
+    adjustments += amt;
+  });
+  console.log('Total Adjustments:', adjustments); // Debug log
+  updateBalance();
 })
-.finally(()=>{
-  setTimeout(()=>{
-    balance.innerText = rs((totalIn-totalOut)+adjustments);
-  },300);
+.catch(err=>{
+  console.error('Error loading adjustments:', err);
+  adjustments = 0;
+  updateBalance();
 });
+
+// Function to update balance display
+function updateBalance() {
+  const finalBalance = (totalIn - totalOut) + adjustments;
+  console.log('Final Balance:', finalBalance); // Debug log
+  balance.innerText = rs(finalBalance);
+}
 
 /* TEAM CONTRIBUTIONS */
 fetch(`${BASE}/Team_Contributions`)

@@ -6,489 +6,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 :root {
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --bg: #0f172a;
-  --bg-secondary: #1e293b;
-  --card-bg: rgba(30, 41, 59, 0.8);
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --border: rgba(148, 163, 184, 0.1);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --primary:#2f80ed;
+  --success:#27ae60;
+  --danger:#eb5757;
+  --bg:#f4f6fb;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Animated Background */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
-  animation: gradientShift 15s ease infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes gradientShift {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+  margin:0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:#333;
 }
 
 .container {
-  max-width: 1400px;
-  margin: auto;
-  padding: 30px 20px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Header */
-header {
-  text-align: center;
-  margin-bottom: 50px;
-  animation: fadeInDown 0.8s ease;
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
 }
 
 h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 10px;
-  letter-spacing: -0.02em;
+  text-align:center;
+  margin-bottom:25px;
 }
 
-.tagline {
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-/* Grid Layouts */
 .grid-top {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 25px;
-  margin-bottom: 25px;
+  display:grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap:20px;
 }
 
 .grid-bottom {
-  display: grid;
-  grid-template-columns: 2.5fr 1fr;
-  gap: 25px;
+  display:grid;
+  grid-template-columns: 3fr 1fr;
+  gap:20px;
+  margin-top:20px;
 }
 
-/* Cards */
 .card {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 30px;
-  border: 1px solid var(--border);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.3),
-    0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.8s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--success));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 
-    0 25px 30px -5px rgba(99, 102, 241, 0.3),
-    0 15px 15px -5px rgba(0, 0, 0, 0.3);
-}
-
-.card:hover::before {
-  opacity: 1;
-}
-
-/* Balance Card */
-.balance-card {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  position: relative;
-  text-align: center;
-}
-
-.balance-icon {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  font-size: 5rem;
-  opacity: 0.15;
-}
-
-.balance-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 15px;
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
 }
 
 .balance {
-  font-size: 3.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  animation: countUp 1s ease;
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  font-size:40px;
+  font-weight:700;
+  color:var(--primary);
 }
 
 .subtitle {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-top: 10px;
-  font-weight: 500;
-}
-
-/* Card Headers */
-.card h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 25px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.card h3::before {
-  content: '';
-  width: 4px;
-  height: 24px;
-  background: linear-gradient(180deg, var(--primary), var(--success));
-  border-radius: 2px;
-}
-
-/* Lists */
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  padding: 15px 18px;
-  margin-bottom: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  position: relative;
-  overflow: hidden;
-}
-
-li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--primary), var(--success));
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-li:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
-  transform: translateX(5px);
-}
-
-li:hover::before {
-  transform: scaleY(1);
-}
-
-/* Donation Item Layout */
-.donation-item {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 15px;
-  align-items: center;
-}
-
-.donation-date {
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.donation-desc {
-  color: var(--text-muted);
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.donation-amount {
-  font-weight: 700;
-  color: var(--success);
-  white-space: nowrap;
-  text-align: right;
-}
-
-/* Table */
-.table-wrapper {
-  overflow-x: auto;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  color:#777;
+  font-size:14px;
 }
 
 table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.9rem;
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
 }
 
 th {
-  background: rgba(99, 102, 241, 0.15);
-  padding: 16px 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  color: var(--text);
-  border-bottom: 2px solid rgba(99, 102, 241, 0.3);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-th:first-child {
-  border-top-left-radius: 16px;
-  text-align: left;
-  padding-left: 20px;
-}
-
-th:last-child {
-  border-top-right-radius: 16px;
+  background:#f0f3f9;
+  padding:10px;
 }
 
 td {
-  padding: 14px 12px;
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-  transition: background 0.2s ease;
+  padding:10px;
+  border-bottom:1px solid #eee;
+  text-align:center;
 }
 
-td:first-child {
-  text-align: left;
-  font-weight: 600;
-  padding-left: 20px;
-}
-
-tr:hover td {
-  background: rgba(99, 102, 241, 0.05);
-}
-
-tr:last-child td:first-child {
-  border-bottom-left-radius: 16px;
-}
-
-tr:last-child td:last-child {
-  border-bottom-right-radius: 16px;
-}
-
-/* Status Badges */
 .status {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  transition: all 0.3s ease;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
 }
 
 .status.yes {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background:#eafaf1;
+  color:var(--success);
 }
 
 .status.no {
-  background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background:#fdecec;
+  color:var(--danger);
 }
 
-.status:hover {
-  transform: scale(1.05);
+ul {
+  padding-left:18px;
 }
 
-/* Links */
+li {
+  margin-bottom:8px;
+}
+
 a {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:500;
 }
 
-a:hover {
-  color: #a855f7;
-  transform: translateX(3px);
-}
-
-/* Footer */
 .footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 50px;
-  padding: 25px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  animation: fadeIn 1s ease 0.5s backwards;
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin-top:30px;
 }
 
-.footer-icon {
-  display: inline-block;
-  animation: pulse 2s ease infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-/* Loading Animation */
-.loading {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(99, 102, 241, 0.3);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Animations */
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Responsive */
-@media(max-width: 1024px) {
-  h1 { font-size: 2.5rem; }
-  .balance { font-size: 3rem; }
+@media(max-width:900px){
   .grid-top, .grid-bottom {
-    grid-template-columns: 1fr;
+    grid-template-columns:1fr;
   }
-}
-
-@media(max-width: 640px) {
-  .container { padding: 20px 15px; }
-  h1 { font-size: 2rem; }
-  .balance { font-size: 2.5rem; }
-  .card { padding: 20px; }
-  th, td { padding: 10px 8px; font-size: 0.85rem; }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
 }
 </style>
 </head>
@@ -497,30 +129,21 @@ a:hover {
 
 <div class="container">
 
-<header>
-  <h1>🤝 Benevolent Society</h1>
-  <p class="tagline">Real-time Fund Management Dashboard</p>
-</header>
+<h1>Benevolent Society Dashboard</h1>
 
 <!-- TOP ROW -->
 <div class="grid-top">
 
   <!-- MAIN BALANCE -->
-  <div class="card balance-card">
-    <span class="balance-icon">💰</span>
-    <div class="balance-label">Current Balance</div>
+  <div class="card">
     <div class="balance">Rs. <span id="balance">0</span></div>
-    <div class="subtitle">Updated in real-time from your records</div>
+    <div class="subtitle">Main Balance</div>
   </div>
 
   <!-- LAST 5 OUTGOING -->
   <div class="card">
-    <h3>Recent Donations</h3>
-    <ul id="outgoing">
-      <li style="text-align: center; padding: 30px;">
-        <span class="loading"></span>
-      </li>
-    </ul>
+    <h3>Last 5 Donations (Outgoing)</h3>
+    <ul id="outgoing"></ul>
   </div>
 
 </div>
@@ -530,124 +153,67 @@ a:hover {
 
   <!-- INCIDENT WISE -->
   <div class="card">
-    <h3>Team Contribution Status</h3>
-    <div class="table-wrapper">
-      <table id="teamTable">
-        <tr><td style="text-align: center; padding: 30px;">
-          <span class="loading"></span>
-        </td></tr>
-      </table>
+    <h3>Incident-wise Contribution from Teams</h3>
+    <div style="overflow-x:auto">
+      <table id="teamTable"></table>
     </div>
   </div>
 
   <!-- BANK STATEMENTS -->
   <div class="card">
-    <h3>Bank Statements</h3>
-    <ul id="statements">
-      <li style="text-align: center; padding: 30px;">
-        <span class="loading"></span>
-      </li>
-    </ul>
+    <h3>Monthly Bank Statements</h3>
+    <ul id="statements"></ul>
   </div>
 
 </div>
 
 <div class="footer">
-  <span class="footer-icon">⚡</span> Last updated: <span id="updated"></span>
+  Last updated: <span id="updated"></span>
 </div>
 
 </div>
 
 <script>
-const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
+const SHEET_ID = "YOUR_SHEET_ID_HERE";
 const BASE = `https://opensheet.elk.sh/${SHEET_ID}`;
-const rs = n => {
-  const num = Number(n);
-  return isNaN(num) ? '0' : num.toLocaleString("en-IN");
-};
+const rs = n => Number(n).toLocaleString("en-IN");
 
 let totalIn = 0, totalOut = 0, adjustments = 0;
-
-// Set initial balance display
-balance.innerText = '0';
 
 /* TRANSACTIONS */
 fetch(`${BASE}/Transactions`)
 .then(r=>r.json())
 .then(data=>{
-  console.log('Transactions data:', data); // Debug log
-  
-  totalIn = 0;
-  totalOut = 0;
-  
   data.forEach(d=>{
-    const amount = Number(d.Amount) || 0;
-    if(d.Type==="IN") totalIn += amount;
-    if(d.Type==="OUT") totalOut += amount;
+    if(d.Type==="IN") totalIn+=+d.Amount;
+    if(d.Type==="OUT") totalOut+=+d.Amount;
   });
-  
-  console.log('Total IN:', totalIn, 'Total OUT:', totalOut); // Debug log
-  updateBalance();
 
-  const outgoingList = data.filter(d=>d.Type==="OUT")
+  data.filter(d=>d.Type==="OUT")
       .sort((a,b)=>new Date(b.Date)-new Date(a.Date))
-      .slice(0,5);
-  
-  if(outgoingList.length === 0) {
-    outgoing.innerHTML = '<li style="text-align: center; color: var(--text-muted);">No donations recorded yet</li>';
-  } else {
-    outgoing.innerHTML = '';
-    outgoingList.forEach(d=>{
-      outgoing.innerHTML+=
-        `<li class="donation-item">
-          <div class="donation-date">${d.Date}</div>
-          <div class="donation-desc">${d.Description}</div>
-          <div class="donation-amount">Rs. ${rs(d.Amount)}</div>
-        </li>`;
-    });
-  }
-})
-.catch(err=>{
-  console.error('Error loading transactions:', err);
-  outgoing.innerHTML = '<li style="text-align: center; color: var(--danger);">Error loading donations</li>';
-  updateBalance();
+      .slice(0,5)
+      .forEach(d=>{
+        outgoing.innerHTML+=
+          `<li>${d.Date} – Rs. ${rs(d.Amount)} (${d.Description})</li>`;
+      });
 });
 
 /* BALANCE ADJUSTMENTS */
 fetch(`${BASE}/Balance_Adjustments`)
 .then(r=>r.json())
 .then(d=>{
-  console.log('Adjustments data:', d); // Debug log
-  adjustments = 0;
-  d.forEach(a=>{
-    const amt = Number(a.Amount) || 0;
-    adjustments += amt;
-  });
-  console.log('Total Adjustments:', adjustments); // Debug log
-  updateBalance();
+  d.forEach(a=>adjustments+=+a.Amount);
 })
-.catch(err=>{
-  console.error('Error loading adjustments:', err);
-  adjustments = 0;
-  updateBalance();
+.finally(()=>{
+  setTimeout(()=>{
+    balance.innerText = rs((totalIn-totalOut)+adjustments);
+  },300);
 });
-
-// Function to update balance display
-function updateBalance() {
-  const finalBalance = (totalIn - totalOut) + adjustments;
-  console.log('Final Balance:', finalBalance); // Debug log
-  balance.innerText = rs(finalBalance);
-}
 
 /* TEAM CONTRIBUTIONS */
 fetch(`${BASE}/Team_Contributions`)
 .then(r=>r.json())
 .then(data=>{
-  if(data.length === 0) {
-    teamTable.innerHTML = '<tr><td style="text-align: center; color: var(--text-muted);">No team data available</td></tr>';
-    return;
-  }
-  
   const headers = Object.keys(data[0]);
   teamTable.innerHTML =
     "<tr>"+headers.map(h=>`<th>${h}</th>`).join("")+"</tr>";
@@ -656,44 +222,26 @@ fetch(`${BASE}/Team_Contributions`)
     let tr="<tr>";
     headers.forEach(h=>{
       if(row[h]==="Yes")
-        tr+=`<td><span class="status yes">✓ Received</span></td>`;
+        tr+=`<td><span class="status yes">Received</span></td>`;
       else if(row[h]==="No")
-        tr+=`<td><span class="status no">⏳ Pending</span></td>`;
-      else tr+=`<td><strong>${row[h]}</strong></td>`;
+        tr+=`<td><span class="status no">Pending</span></td>`;
+      else tr+=`<td><b>${row[h]}</b></td>`;
     });
     teamTable.innerHTML+=tr+"</tr>";
   });
-})
-.catch(()=>{
-  teamTable.innerHTML = '<tr><td style="text-align: center; color: var(--danger);">Error loading team data</td></tr>';
 });
 
 /* BANK STATEMENTS */
 fetch(`${BASE}/Bank_Statements`)
 .then(r=>r.json())
 .then(d=>{
-  if(d.length === 0) {
-    statements.innerHTML = '<li style="text-align: center; color: var(--text-muted);">No statements uploaded yet</li>';
-    return;
-  }
-  
-  statements.innerHTML = '';
   d.slice(0,5).forEach(s=>{
     statements.innerHTML+=
       `<li><a href="${s.Link}" target="_blank">📄 ${s.Month}</a></li>`;
   });
-})
-.catch(()=>{
-  statements.innerHTML = '<li style="text-align: center; color: var(--danger);">Error loading statements</li>';
 });
 
-updated.innerText = new Date().toLocaleString("en-GB", {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit'
-});
+updated.innerText = new Date().toLocaleString("en-GB");
 </script>
 
 </body>

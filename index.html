@@ -648,7 +648,13 @@ fetch(`${BASE}/Team_Contributions`)
     return;
   }
   
-  const headers = Object.keys(data[0]);
+  const allHeaders = Object.keys(data[0]);
+  // Keep first column (team name) + last 5 incident columns
+  const firstColumn = allHeaders[0];
+  const incidentColumns = allHeaders.slice(1); // All columns except first
+  const last5Incidents = incidentColumns.slice(-5); // Get last 5 incidents
+  const headers = [firstColumn, ...last5Incidents];
+  
   teamTable.innerHTML =
     "<tr>"+headers.map(h=>`<th>${h}</th>`).join("")+"</tr>";
 

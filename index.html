@@ -503,8 +503,8 @@ a:hover {
 <div class="container">
 
 <header>
-  <h1>🤝 Benevolent Society</h1>
-  <p class="tagline">Real-time Fund Management Dashboard</p>
+  <h1>Kreeda Benevolent Society</h1>
+  <p class="tagline">From All of Us, For Each Other</p>
 </header>
 
 <!-- TOP ROW -->
@@ -515,7 +515,7 @@ a:hover {
     <span class="balance-icon">💰</span>
     <div class="balance-label">Current Balance</div>
     <div class="balance">Rs. <span id="balance">0</span></div>
-    <div class="subtitle">Updated in real-time from your records</div>
+    <div class="subtitle">Updated in real-time</div>
   </div>
 
   <!-- LAST 5 OUTGOING -->
@@ -642,6 +642,56 @@ function updateBalance() {
   const finalBalance = (totalIn - totalOut) + adjustments;
   console.log('Final Balance:', finalBalance); // Debug log
   balance.innerText = rs(finalBalance);
+  
+  // Update balance color based on amount
+  updateBalanceColor(finalBalance);
+}
+
+// Function to update balance color with gradient
+function updateBalanceColor(amount) {
+  const balanceElement = document.getElementById('balance').parentElement;
+  let color, bgGradient;
+  
+  if (amount >= 200000) {
+    // Green - Excellent
+    color = '#10b981';
+    bgGradient = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(52, 211, 153, 0.2) 100%)';
+  } else if (amount >= 150000) {
+    // Light Green
+    color = '#22c55e';
+    bgGradient = 'linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%)';
+  } else if (amount >= 100000) {
+    // Yellow-Green
+    color = '#84cc16';
+    bgGradient = 'linear-gradient(135deg, rgba(132, 204, 22, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
+  } else if (amount >= 75000) {
+    // Yellow
+    color = '#eab308';
+    bgGradient = 'linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(132, 204, 22, 0.2) 100%)';
+  } else if (amount >= 50000) {
+    // Orange
+    color = '#f59e0b';
+    bgGradient = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(234, 179, 8, 0.2) 100%)';
+  } else {
+    // Red - Critical
+    color = '#ef4444';
+    bgGradient = 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%)';
+  }
+  
+  // Apply color to balance text
+  balanceElement.style.background = color;
+  balanceElement.style.webkitBackgroundClip = 'text';
+  balanceElement.style.webkitTextFillColor = 'transparent';
+  balanceElement.style.backgroundClip = 'text';
+  
+  // Apply gradient to card background
+  const balanceCard = document.querySelector('.balance-card');
+  balanceCard.style.background = bgGradient;
+  balanceCard.style.borderColor = color + '40'; // 40 is 25% opacity in hex
+  
+  // Add smooth transition
+  balanceElement.style.transition = 'all 0.6s ease';
+  balanceCard.style.transition = 'all 0.6s ease';
 }
 
 /* TEAM CONTRIBUTIONS */

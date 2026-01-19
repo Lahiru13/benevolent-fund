@@ -568,7 +568,7 @@ const SHEET_ID = "1ihsdVJePDhFucaCY9W8L4oXM9fFw4sNDL3kKN64d-Vo";
 const BASE = `https://opensheet.elk.sh/${SHEET_ID}`;
 const rs = n => {
   const num = Number(n);
-  return isNaN(num) ? '0' : num.toLocaleString("en-IN");
+  return isNaN(num) ? '0.00' : num.toLocaleString("en-IN");
 };
 
 let totalIn = 0, totalOut = 0, adjustments = 0;
@@ -760,4 +760,5 @@ updated.innerText = new Date().toLocaleString("en-GB", {
 </body>
 
 </html>
+
 
